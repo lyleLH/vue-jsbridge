@@ -51,11 +51,25 @@ export default {
   methods: {
             btn_click:function(game_name) {
                 this.game = game_name;
-                console.log(this.game);
-                this.$bridge.callhandler('ObjC Echo', {"name":this.game}, (data) => {
-                    
-	          
-            });
+                // console.log(this.game);
+                //调用OC已经注册好的方法
+
+                this.$bridge.callhandler('invokeNativeByH5', {"methodName":"ocMethodName","params":{"name":"Tom"}}, (data) => {
+                   
+                });
+                //提供方法<'JS Echo'>给OC调用
+                /*
+                data sample :{
+                            	params = {
+	                              name = Tom;
+                              };
+	                            methodName = ocMethodName;
+                              }
+                */
+                this.$bridge.registerhandler('invokeH5ByNative', (data, responseCallback) => {
+                  console.log(data)
+                      responseCallback({"timeToEat":"饺子"});
+                });
             }
             
         }
