@@ -12,7 +12,9 @@
       <p>函数调用测试，点击：{{ game }}</p>
       <!-- v-on:click的冒号不能有空格，否则无效 -->
       <!-- v-on:click绑定事件，这里选择的是鼠标单击 -->
-      <button v-on:click="btn_click('我的世界', 1)">我的世界</button>
+      <button v-on:click="btn_click('注册方法供给原生后续调用', 1)">
+        注册方法供给原生后续调用
+      </button>
       <button v-on:click="btn_click('魂斗罗2', 2)">魂斗罗2</button>
       <button v-on:click="btn_click('忍者神龟', 3)">忍者神龟</button>
       <!-- @ 就是 v-on: 这五个字符组合的缩写 -->
@@ -115,25 +117,9 @@ export default {
     btn_click: function (game_name, index) {
       this.game = game_name;
       // console.log(this.game);
-      //调用OC已经注册好的方法
       if (index == 1) {
-        this.$bridge.callhandler(
-          "invokeNativeByH5",
-          { methodName: "ocMethodName1", params: { name: game_name } },
-          (data) => {}
-        );
-      }
-
-      if (index == 2) {
-        this.$bridge.callhandler(
-          "invokeNativeByH5",
-          { methodName: "ocMethodName2", params: { name: game_name } },
-          (data) => {}
-        );
-      }
-
-      //提供方法<'JS Echo'>给OC调用
-      /*
+        //提供方法<'JS Echo'>给OC调用
+        /*
                 data sample :{
                             	params = {
 	                              name = Tom;
@@ -141,12 +127,30 @@ export default {
 	                            methodName = ocMethodName;
                               }
                 */
-      this.$bridge.registerhandler(
-        "invokeH5ByNative",
-        (data, responseCallback) => {
-          responseCallback({ msg:data ,timeToEat: "饺子" });
-        }
-      );
+        this.$bridge.registerhandler(
+          "invokeH5ByNative",
+          (data, responseCallback) => {
+            responseCallback({ msg: data, timeToEat: "饺子" });
+          }
+        );
+      }
+
+      //调用OC已经注册好的方法
+      if (index == 2) {
+        this.$bridge.callhandler(
+          "invokeNativeByH5",
+          { methodName: "ocMethodName1", params: { name: game_name } },
+          (data) => {}
+        );
+      }
+
+      if (index == 3) {
+        this.$bridge.callhandler(
+          "invokeNativeByH5",
+          { methodName: "ocMethodName2", params: { name: game_name } },
+          (data) => {}
+        );
+      }
     },
   },
 };
